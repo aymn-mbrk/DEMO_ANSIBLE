@@ -1,0 +1,70 @@
+---
+- name: Deploy a web application (FLASK & MYSQL)
+  hosts: db_web_1,db_web_2
+  vars:
+    db_name: employee_db
+    db_user: db_user
+    db_password: Passw0rd
+  tasks:
+    - name: Update package index
+      become: yes
+      apt:
+        update_cache: yes
+
+    - name: Install all required dependencies
+      become: yes
+      apt: name={{ item }} state=present
+      with_items:
+        - python3
+        - python3-setuptools
+        - python3-dev
+        - build-essential
+        - python3-pip
+        - python3-mysqldb
+
+    - name: Install MySQL Service
+      become: yes
+      apt: name={{ item }} state=present
+      with_items:
+        - mysql-server
+        - mysql-client
+
+    - name: Start MySQL Service
+      become: yes
+      service:
+          name: mysql
+          state: started
+          enabled: yes
+
+    - name: Create Application DB
+      become: yes
+      mysql_db: 
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        name: "{{ db_name }}"
+        state: present
+
+    - name: Create DB user
+      become: yes
+      mysql_user:
+      name: "{{ db_user }}"
+      password: "{{ db_password }}"
+      priv: '*.*:ALL'
+      state: present   
+      host: '%'
+
+    - name: Install Python Flask dependency
+      become: yes
+      command:
+        cmd: pip install {{ item }} --break-system-packages
+      loop:
+        - flask==2.3.3
+        - flask-mysql
+
+    - name: Copy source code
+      become: yes
+      copy: src=app.py dest=/opt/app.py
+
+
+    - name: Start Web Server
+      become: yes
+      shell: FLASK_APP=/opt/app.py nohup flask run --host=0.0.0.0 &
