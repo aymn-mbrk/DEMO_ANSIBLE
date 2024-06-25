@@ -1,0 +1,9 @@
+plugin: gcp_compute
+projects:
+    - positive-rush-426912-h6
+auth_kind: serviceaccount
+service_account_file: /home/aymanmbarki48/DEMO_ANSIBLE/inventory/positive-rush-426912-h6-cdc24fe0f35b.json
+keyed_groups:
+  - key: name
+    prefix: ''
+    separator: ''

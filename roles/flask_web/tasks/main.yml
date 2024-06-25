@@ -1,7 +1,7 @@
     - name: Install Python Flask dependency
       become: yes
       command:
-        cmd: pip install {{ item }} --break-system-packages
+        cmd: pip install {{ item }} 
       loop:
         - flask==2.3.3
         - flask-mysql

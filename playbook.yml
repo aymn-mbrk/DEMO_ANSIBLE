@@ -1,7 +1,49 @@
 ---
-- name: Deploy a web application (FLASK & MYSQL)
-  hosts: db_web_1,db_web_2
+- name: Get DB instance details 
+  hosts: ansible_controller
+  tasks:
+    - name: Get instance details
+      gcp_compute_instance_info:
+        filters:
+          name= "db"
+        auth_kind: serviceaccount
+        service_account_file: "/home/aymanmbarki48/DEMO_ANSIBLE/inventory/positive-rush-426912-h6-cdc24fe0f35b.json"
+        project: "positive-rush-426912-h6"
+        zone: "europe-west9-a"
+      register: instance_info
+    
+    - name: Replace mysql host IP in the file app.py
+      become: yes
+      ansible.builtin.lineinfile:    
+        path: /home/aymanmbarki48/DEMO_ANSIBLE/app.py
+        regexp: '^mysql_database_host = .*'  
+        line: "mysql_database_host = '{{ instance_info.resources[0].networkInterfaces[0].networkIP }}'"
+
+
+          #    - name: Set instance_info as a fact
+          # set_fact:
+          # db_info: "{{ instance_info.resources[0].networkInterfaces[0].networkIP }}"
+          # delegate_to: "{{ item }}"
+          # delegate_facts: True
+          #  loop: "{{ groups['db'] }}"
+
+          #- name: Get instance Internal IP
+          #hosts: db
+          #  tasks:
+          # - name: print the fact
+          #debug:
+          #msg: "{{ db_info }}"
+
+
+- name: Deploy MYSQL DB
+  hosts: db
   roles:
     - update_install
     - mysql_db
-    - flask_web 
+  
+
+- name: Deploy WEB APP
+  hosts: web1,web2 
+  roles:
+    - update_install
+    - flask_web
