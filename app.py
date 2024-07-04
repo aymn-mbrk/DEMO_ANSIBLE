@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 mysql = MySQL()
 
-mysql_database_host = '10.200.0.17'
+mysql_database_host = '10.200.0.26'
 
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'db_user'
