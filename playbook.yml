@@ -1,4 +1,9 @@
 ---
+- name: DEPLOY GCP INSTANCES WITH TERRAFORM
+  hosts: ansible_controller
+  roles:
+    - terraform
+
 - name: Get DB instance details 
   hosts: ansible_controller
   tasks:
