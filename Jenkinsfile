@@ -14,7 +14,7 @@ pipeline {
                 script {
                     // Replace 'your-playbook.yml' with your playbook file
                     // And replace 'your-inventory.ini' with your inventory file
-                    sh 'ansible-playbook -i inventory/gcp.yaml playbook-test1.yml'
+                    sh 'ansible-playbook -i inventory/gcp.yaml TESTS/playbook-test1.yml'
                 }
             }
         }
