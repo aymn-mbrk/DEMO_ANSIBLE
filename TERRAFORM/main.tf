@@ -24,6 +24,8 @@ resource "google_compute_instance" "vm" {
   }
 }
 
+
+
 output "instance_ips" {
   value = { for i in google_compute_instance.vm : i.name => i.network_interface[0].access_config[0].nat_ip }
   description = "The public IP addresses of the VM instances, mapped by name"

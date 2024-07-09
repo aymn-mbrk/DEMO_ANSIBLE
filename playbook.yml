@@ -12,7 +12,7 @@
         filters:
           name= "db"
         auth_kind: serviceaccount
-        service_account_file: "{{ lookup('env','GOOGLE_APPLICATION_CREDENTIALS') }}"
+        service_account_file: "/home/aymanmbarki48/credentials/positive-rush-426912-h6-90a681642f90.json"
         project: "positive-rush-426912-h6"
         zone: "europe-west9-a"
       register: instance_info
