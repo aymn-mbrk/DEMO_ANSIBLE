@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Replace 'your-repo' with your repository URL
+                // Get the repo
                git branch: 'main', url: 'git@github.com:aymn-mbrk/DEMO_ANSIBLE.git'
             }
         }
@@ -12,8 +12,7 @@ pipeline {
         stage('Run Ansible') {
             steps {
                 script {
-                    // Replace 'your-playbook.yml' with your playbook file
-                    // And replace 'your-inventory.ini' with your inventory file
+                    // Deploy the ansible playbook
                     sh 'ansible-playbook -i inventory/gcp.yaml TESTS/playbook-test1.yml'
                 }
             }

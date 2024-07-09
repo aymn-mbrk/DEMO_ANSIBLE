@@ -1,23 +1,13 @@
-- name: Replace bind-address in MySQL config
-  hosts: db
-  tasks:
-    - name: Install google-auth
-      ansible.builtin.pip:
-        name: google-auth
-      become: yes
-        
-    - name: Get instance details
-      gcp_compute_instance_info:
-        filters:
-          name= "db"
-        auth_kind: serviceaccount
-        service_account_file: "/home/aymanmbarki48/DEMO_ANSIBLE/inventory/positive-rush-426912-h6-cdc24fe0f35b.json"
-        project: "positive-rush-426912-h6"
-        zone: "europe-west9-a"
-      register: instance_info
+---
+- name: DEPLOY GCP INSTANCES WITH TERRAFORM
+  hosts: ansible_controller
+  roles:
+    - terraform
 
-    - name: Replace bind-address in MySQL config
-      ansible.builtin.lineinfile:
-        path: /etc/mysql/mysql.conf.d/mysqld.cnf
-        regexp: '^bind-address\s*=\s*.*$'
-        line: 'bind-address = {{ instance_info.resources[0].networkInterfaces[0].networkIP }}'
+- name: Check SSH Connection
+  hosts: db,web1,web2
+  remote_user: aymanmbarki48
+  private_key_file: ~/.ssh/id_rsa
+  tasks: 
+    - name: ssh
+      ping:
